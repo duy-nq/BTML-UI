@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import SignIn from './components/Account/SignIn'
+import SignUp from './components/Account/SignUp'
+import Start from './components/LandingPage/Start'
+import AfterLogin from './components/LandingPage/AfterLogin'
+
+import withAuth from "./HOCs";
+
 
 function App() {
+  const protectedPage = [
+    withAuth(AfterLogin),
+  ]
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+        <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/home" Component={protectedPage[0]} />
+            <Route path="*" element={<Start />} />
+        </Routes>
+    </Router>
+);
 }
 
 export default App;
