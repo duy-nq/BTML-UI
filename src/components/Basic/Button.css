@@ -1,0 +1,52 @@
+.button-shape {
+    display: flex;
+    padding: 8px 25px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: 7px;
+    background: #FFF;
+    transition: width 0.5s, background-color 0.4s, color 0.5s; /* Add transition for smooth effect */
+}
+
+.button-text {
+    color: rgba(107, 136, 239, 0.73);
+    text-align: center;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.button-shape:hover {
+    width: 194px; /* Increase width on hover */
+    background: rgba(107, 136, 239, 0.73); /* Change background color on hover */
+}
+
+.button-shape:hover .button-text {
+    color: #FFF; /* Change text color on hover */
+}
+
+
+.button-shape:active {
+    display: flex;
+    width: 194px;
+    padding: 8px 25px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 7px;
+    background: #5867EC;
+}
+
+.button-shape:active .button-text {
+    color: #FFF;
+    text-align: center;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
