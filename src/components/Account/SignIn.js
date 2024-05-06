@@ -15,6 +15,7 @@ export default function SignIn() {
         setPassword(event.target.value);
     };
 
+    // Using API here to login
     const handelSubmit = () => {
         console.log(username + ' - ' + password)
     }

@@ -12,7 +12,8 @@
 
 .button-text {
     color: rgba(107, 136, 239, 0.73);
-    text-align: center;
+    width: max-content;
+    text-align: left;
     font-family: Inter;
     font-size: 32px;
     font-style: normal;
@@ -21,7 +22,7 @@
 }
 
 .button-shape:hover {
-    width: 194px; /* Increase width on hover */
+    width: auto; /* Increase width on hover */
     background: rgba(107, 136, 239, 0.73); /* Change background color on hover */
 }
 
@@ -29,10 +30,9 @@
     color: #FFF; /* Change text color on hover */
 }
 
-
 .button-shape:active {
     display: flex;
-    width: 194px;
+    width: auto;
     padding: 8px 25px;
     justify-content: center;
     align-items: center;
