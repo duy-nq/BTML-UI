@@ -1,6 +1,7 @@
 import React from "react";
 import MechanicAndTime from "./WhoWhen";
 import HeaderRow from "./HeaderRow";
+import Row from "./Row";
 
 export default function ServiceDetails() {
     const basicInfo = {
@@ -9,6 +10,61 @@ export default function ServiceDetails() {
         'from': '2024-02-03 17:00:00',
         'to': '2024-02-03 18:15:00'
     }
+
+    const fakeDataJson = [
+        {
+            "id": 1,
+            "name": "Board dàn lạnh",
+            "company": "LG",
+            "number": "1",
+            "price": "250000",
+            "total": "250000"
+        },
+        {
+            "id": 2,
+            "name": "Gas",
+            "company": "Samsung",
+            "number": "2",
+            "price": "150000",
+            "total": "300000"
+        },
+        {
+            "id": 3,
+            "name": "Lưới lọc ba lớp",
+            "company": "Samsung",
+            "number": "1",
+            "price": "200000",
+            "total": "200000"
+        }
+    ];
+
+
+    const fakeData = fakeDataJson.map((item) => {        
+        if (item.company === "0") return <></>;
+        return (
+            <Row 
+                id={item.id}
+                name={item.name} 
+                company={item.company} 
+                number={item.number}
+                price={item.price}
+                total={item.total}
+            />
+        );
+    });
+
+    // calculate total company
+    const totalcompany = fakeDataJson.reduce((total, item) => {
+        return total + parseInt(item.total.replace(/\./g, ''));
+    }, 0);
+
+    // add a row with class="table-footer" for total company" in format 1.000.000
+    fakeData.push(
+        <Row 
+            name='Tổng cộng'
+            total={totalcompany}
+        />
+    );
     
     return (
         <>
@@ -28,6 +84,8 @@ export default function ServiceDetails() {
                 to={basicInfo.to}
             />
             <HeaderRow></HeaderRow>
+            {fakeData}
+            <div style={{paddingBottom: 10}}></div>
         </div>
         </>
     );
