@@ -29,6 +29,7 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/sd" element={<ServiceDetails />} />
             <Route path="/home" Component={protectedPage[0]} />
+            <Route path="/customer" element={<AfterLogin />} />
             <Route path="*" element={<Start />} />
         </Routes>
     </Router>
