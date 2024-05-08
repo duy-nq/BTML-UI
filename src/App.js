@@ -6,7 +6,8 @@ import SignUp from './components/Account/SignUp'
 import YourProfile from './components/Account/Profile';
 import ChangePassword from './components/Account/Password';
 import Start from './components/LandingPage/Start'
-import AfterLogin from './components/LandingPage/AfterLogin'
+import AfterLoginCustomer from './components/LandingPage/AfterLogin_Customer'
+import AfterLoginMechanic from './components/LandingPage/AfterLogin_Mechanic';
 import Feedback from './components/Service/Feedback';
 import ServiceDetails from './components/Service/ServiceDetails';
 
@@ -15,7 +16,8 @@ import withAuth from "./HOCs";
 
 function App() {
   const protectedPage = [
-    withAuth(AfterLogin),
+    withAuth(AfterLoginCustomer),
+    withAuth(AfterLoginMechanic)
   ]
 
   return (
@@ -29,7 +31,8 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/sd" element={<ServiceDetails />} />
             <Route path="/home" Component={protectedPage[0]} />
-            <Route path="/customer" element={<AfterLogin />} />
+            <Route path="/customer" element={<AfterLoginCustomer />} />
+            <Route path="/mechanic" element={<AfterLoginMechanic />} />
             <Route path="*" element={<Start />} />
         </Routes>
     </Router>

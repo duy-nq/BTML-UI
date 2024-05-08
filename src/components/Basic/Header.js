@@ -1,12 +1,12 @@
-import React, {useState} from "react";
+import React from "react";
 import { Button } from "./Button";
 import SignIn from "../Account/SignIn";
+import './Popup.css'
 
-export default function Header() {
-    const [isSignInOpen, setIsOpen] = useState(false)
-
+export default function Header() {  
     const handleSignInClick = () => {
-        setIsOpen(true);
+        document.querySelector('.popup').style.display = 'flex';
+
     };
     
     return (
@@ -25,7 +25,9 @@ export default function Header() {
                     onClick={handleSignInClick}
                 />
             </div>
-            {isSignInOpen && <SignIn/>}
+            <div className='popup'>
+                <SignIn></SignIn>
+            </div>
         </div>
 
     );

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ALH() {
+export default function ALH(props) {
     return (
         <div style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 24, display: 'inline-flex'}}>
             <div style={{width: 206, height: 103, padding: 6, background: 'rgba(217, 217, 217, 0)', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
@@ -11,22 +11,22 @@ export default function ALH() {
             </div>
             <div style={{width: '100%', background: 'rgba(106.58, 135.72, 239.05, 0.09)', borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent: 'center', alignItems: 'center', gap: 28, display: 'inline-flex'}}>
                 <div style={{width: 'fit-content', height: 44, justifyContent: 'center', alignItems: 'center', gap: 19, display: 'flex'}}>
-                    <div style={{width: 222, alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>OUR SERVICES</div>
+                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f1}</div>
                     </div>
-                    <div style={{width: 231, alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>MAKE REQUEST</div>
+                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f2}</div>
                     </div>
-                    <div style={{width: 159, alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>PAYMENT</div>
+                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f3}</div>
                     </div>
-                    <div style={{width: 157, alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>HISTORY</div>
+                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                        <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f4}</div>
                     </div>
                 </div>
                 <div style={{height: 54, justifyContent: 'flex-end', alignItems: 'center', gap: 2, display: 'flex'}}>
                     <div style={{height: 54, padding: 10, justifyContent: 'flex-end', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: '#5867EC', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>Hoang Trung Dung</div>
+                        <div style={{textAlign: 'center', color: '#5867EC', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.name}</div>
                     </div>
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
                         <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo"></img>
