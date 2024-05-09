@@ -26,7 +26,7 @@ export default function SignIn() {
     }
     
     return(
-        <div className="signin" style={{scale:'80%', zIndex:999, backdropFilter: 'blur(3px)' , width: '800', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
+        <div className="signin" style={{scale:'80%', zIndex:999 , width: '800', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
             <div style={{alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', gap: 23, display: 'inline-flex'}}>
                 <div onClick={closeSignIn} style={{width: 48, height: 48, position: 'relative'}}>
                     <img src="close.svg" alt="Close Icon"/>

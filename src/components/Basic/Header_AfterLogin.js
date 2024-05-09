@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function ALH(props) {
+export default function ALH(props) {   
+    const handleFunction2 = () => {
+        if (props.f2 === 'MAKE REQUEST')
+        document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
+    }
+    
     return (
         <div style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 24, display: 'inline-flex'}}>
             <div style={{width: 206, height: 103, padding: 6, background: 'rgba(217, 217, 217, 0)', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
@@ -14,7 +19,7 @@ export default function ALH(props) {
                     <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f1}</div>
                     </div>
-                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                    <div onClick={handleFunction2} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f2}</div>
                     </div>
                     <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>

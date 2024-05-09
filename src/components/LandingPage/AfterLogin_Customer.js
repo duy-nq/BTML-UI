@@ -2,6 +2,7 @@ import React from "react";
 import ALH from "../Basic/Header_AfterLogin";
 import UpcomingContent from "./Upcoming";
 import ALF from "../Basic/Footer_AfterLogin";
+import RequestAndService from "./Request";
 
 export default function AfterLogin() {
     return (
@@ -14,7 +15,8 @@ export default function AfterLogin() {
                     f4='HISTORY'
                     name='Pham Quoc Viet'
                 />  
-                <UpcomingContent></UpcomingContent>
+                <UpcomingContent/>
+                <RequestAndService/>
                 <ALF
                     content='Copyrights © 2024 duy-nq. All rights reserved'
                 />  

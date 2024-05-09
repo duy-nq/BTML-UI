@@ -3,7 +3,7 @@ import { Button } from "../Basic/Button";
 import TextInputS1 from "../Basic/Input";
 import './Style.css'
 
-export default function SignIn() {
+export default function SignUp() {
     const [gmail, setGmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
@@ -20,15 +20,19 @@ export default function SignIn() {
         setName(event.target.value);
     }
 
+    const closeSignUp = () => {
+        document.querySelector('.popup').style.display = 'none'
+    }
+
     // Using API here to login
     const handelSubmit = () => {
         console.log(gmail + ' - ' + password + ' - ' + name)
     }
     
     return(
-        <div style={{width: '800', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
+        <div style={{scale: '80%', width: '800', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
             <div style={{alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', gap: 23, display: 'inline-flex'}}>
-                <div style={{width: 48, height: 48, position: 'relative'}}>
+                <div onClick={closeSignUp} style={{width: 48, height: 48, position: 'relative'}}>
                     <img src="close.svg" alt="Close Icon"/>
                 </div>
             </div>

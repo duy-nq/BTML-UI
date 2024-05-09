@@ -1,12 +1,24 @@
 import React from "react";
+import { useState } from "react";
 import { Button } from "./Button";
 import SignIn from "../Account/SignIn";
+import SignUp from "../Account/SignUp";
 import './Popup.css'
 
 export default function Header() {  
+    const [displaySignIn, setSignIn] = useState(false)
+    const [displaySignUp, setSignUp] = useState(false)
+    
     const handleSignInClick = () => {
         document.querySelector('.popup').style.display = 'flex';
+        setSignIn(true)
+        setSignUp(false)
+    };
 
+    const handleSignUpClick = () => {
+        document.querySelector('.popup').style.display = 'flex';
+        setSignUp(true)
+        setSignIn(false)
     };
     
     return (
@@ -19,14 +31,18 @@ export default function Header() {
             </div>
             <div style={{flex: '1 1 0', height: '55px', paddingLeft: '22px', paddingRight: '22px', justifyContent: 'center', alignItems: 'center', gap: '52px', display: 'flex'}}>
                 <Button content="About Us" />
-                <Button content="Sign Up" />
+                <Button 
+                    content="Sign Up" 
+                    onClick={handleSignUpClick}
+                />
                 <Button 
                     content="Sign In" 
                     onClick={handleSignInClick}
                 />
             </div>
             <div className='popup'>
-                <SignIn></SignIn>
+                {displaySignIn&&<SignIn/>}
+                {displaySignUp&&<SignUp/>}
             </div>
         </div>
 
