@@ -24,6 +24,16 @@ export default function RequestAndService() {
     const [model, setModel] = useState('')
     const [listOfRequests, setList] = useState([])
 
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+    
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
     const handleIdChange = (event) => {
         setServiceId(event.target.value)
     }
@@ -84,6 +94,16 @@ export default function RequestAndService() {
         const updatedRequests = listOfRequests.filter(item => item.id !== id);
         setList(updatedRequests);
         reassignIds(updatedRequests);        
+    }
+
+    const handlePayment = () => {
+        if (listOfRequests.length === 0) {
+            alert('Please choose at least one service!')
+            return;
+        }
+        
+        if (window.confirm('Redirect to payment page, cannot go back to this step! Are you sure?'))
+            window.open('https://example.com', '_blank')
     }
 
     const displayedRows = listOfRequests.map((item) => {
@@ -148,7 +168,12 @@ export default function RequestAndService() {
                 <div style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'flex'}}>
                     {displayedRows}
                 </div>
-                <div style={{width: 1145, color: 'black', fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>
+                <div 
+                    style={{width: 1145, color: isHovered ? 'red':'black', cursor: isHovered ? 'pointer':'default',fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}
+                    onClick={handlePayment}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
                     Click here to secure your order with payment!
                 </div>
             </div>
