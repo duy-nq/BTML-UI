@@ -22,6 +22,7 @@ export default function RequestAndService() {
 
     const [serviceId, setServiceId] = useState('')
     const [model, setModel] = useState('')
+    const [listOfRequests, setList] = useState([])
 
     const handleIdChange = (event) => {
         setServiceId(event.target.value)
@@ -31,13 +32,71 @@ export default function RequestAndService() {
         setModel(event.target.value)
     }
 
+    function getServiceById(id) {
+        var numId = parseInt(id)
+        
+        for (let i = 0; i < listOfServices.length; i++) {
+            if (listOfServices[i].id === numId) {
+                return listOfServices[i].name;
+            }
+        }
+    }
+
     const handleAdd = () => {
         if (serviceId==='' || model==='') {
             alert('Please verify your option again before add to card!')
+            return
         }
-        
-        console.log(serviceId + ' - ' + model + ' - ' + document.getElementById('quantity').value)        
+
+        let request = {
+            "id": 0, 
+            "service": getServiceById(serviceId), 
+            "model": model, 
+            "quantity": parseInt(document.getElementById('quantity').value)
+        }
+
+        const existingRequestIndex = listOfRequests.findIndex((item) => 
+            item.service === request.service && item.model === request.model
+        )        
+
+        if (existingRequestIndex !== -1) {
+            const updatedRequests = [...listOfRequests]
+            updatedRequests[existingRequestIndex].quantity = request.quantity
+            setList(updatedRequests)
+        }
+        else {
+            request.id = listOfRequests.length+1
+            setList([...listOfRequests, request])
+        }
     }
+
+    const reassignIds = (requests) => {
+        const updatedRequests = requests.map((item, index) => {
+            return {
+                ...item,
+                id: index + 1
+            };
+        });
+        setList(updatedRequests);
+    }
+
+    const selfDestroy = (id) => {
+        const updatedRequests = listOfRequests.filter(item => item.id !== id);
+        setList(updatedRequests);
+        reassignIds(updatedRequests);        
+    }
+
+    const displayedRows = listOfRequests.map((item) => {
+        return (
+            <RowWithFunc
+                id={item.id}
+                service={item.service}
+                ac={item.model}
+                quantity={item.quantity}
+                func={() => selfDestroy(item.id)}
+            />
+        )
+    })
       
     
     return (
@@ -87,16 +146,7 @@ export default function RequestAndService() {
                 </div>
                 <div style={{width: 1145, color: 'black', fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>List of service(s)</div>
                 <div style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'flex'}}>
-                    <RowWithFunc
-                        quantity='1'
-                        service='Cleaning'
-                        ac='LG F81KL-23'
-                    />
-                    <RowWithFunc
-                        quantity='2'
-                        service='Cleaning'
-                        ac='Samsung S632-251 All in one'
-                    />
+                    {displayedRows}
                 </div>
                 <div style={{width: 1145, color: 'black', fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>
                     Click here to secure your order with payment!

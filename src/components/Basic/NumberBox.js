@@ -5,7 +5,6 @@ export default function NumberBox(props) {
 
     const handleChange = (event) => {
         setQuantity(event.target.value)
-        console.log(quantity)
     }       
     
     return (
