@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ServiceCard from "../Basic/Card";
 import ComboBox from "../Basic/ComboBox";
 import NumberBox from "../Basic/NumberBox";
 import Button01 from "../Basic/Button_01";
 import RowWithFunc from "../Service/RowWithFunction";
+import DateTime from "../Basic/DateTimePicker";
 
 export default function RequestAndService() {    
     let listOfServices = [
@@ -25,6 +26,41 @@ export default function RequestAndService() {
     const [listOfRequests, setList] = useState([])
 
     const [isHovered, setIsHovered] = useState(false);
+    const [isPicking, setIsPicking] = useState(false)
+
+    const [currentTime, setCurrentTime] = useState('');
+    const [customizedTime, setCustomizedTime] = useState('');
+
+    useEffect(() => {
+        // Function to get the next quarter-hour time
+        const getNextQuarterHour = () => {
+            const now = new Date();
+            now.setMilliseconds(0);
+            now.setSeconds(0);
+            const minutes = now.getMinutes();
+            const remainder = minutes % 15;
+            const nextQuarterHour = remainder === 0 ? minutes : minutes + (15 - remainder);
+            now.setMinutes(nextQuarterHour);
+            return now;
+        };
+
+        // Function to update the current time every second
+        const updateCurrentTime = () => {
+            const now = getNextQuarterHour();
+            const date = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            setCurrentTime(`${date} - ${time}`);
+        };
+
+        // Update the current time initially
+        updateCurrentTime();
+
+        // Update the current time every second
+        const interval = setInterval(updateCurrentTime, 1000);
+
+        // Clean up the interval
+        return () => clearInterval(interval);
+    }, []);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -40,6 +76,24 @@ export default function RequestAndService() {
 
     const handleModelChange = (event) => {
         setModel(event.target.value)
+    }
+
+    const handleTimeChange = (event) => {
+        const inputDate = new Date(event.target.value)
+        const formattedDateTime = `${inputDate.getDate().toString().padStart(2, '0')}/${(inputDate.getMonth() + 1).toString().padStart(2, '0')}/${inputDate.getFullYear()} - ${inputDate.getHours().toString().padStart(2, '0')}:${inputDate.getMinutes().toString().padStart(2, '0')}`; // Format the datetime value
+        setCustomizedTime(formattedDateTime);
+    }
+
+    const rightNow = () => {
+        setCustomizedTime('')
+        alert('RIGHT NOW! has been picked!')
+    }
+
+    const openPicker = (event) => {
+        document.querySelector('.popup').style.display = 'flex';
+        setIsPicking(true)
+
+        alert('PERSONALIZE has been picked!')
     }
 
     function getServiceById(id) {
@@ -96,10 +150,17 @@ export default function RequestAndService() {
         reassignIds(updatedRequests);        
     }
 
-    const handlePayment = () => {
+    const handlePayment = () => {      
         if (listOfRequests.length === 0) {
             alert('Please choose at least one service!')
             return;
+        }
+
+        if (customizedTime !== '') {
+            alert('You are choosing PERSONALIZE plan: ' + customizedTime)
+        }
+        else {
+            alert('You are choosing RIGHT NOW! plan: ' + currentTime)
         }
         
         if (window.confirm('Redirect to payment page, cannot go back to this step! Are you sure?'))
@@ -127,15 +188,17 @@ export default function RequestAndService() {
                 <div style={{paddingBottom: 10, justifyContent: 'flex-start', alignItems: 'flex-start', gap: 101, display: 'inline-flex'}}>
                     <ServiceCard
                         title='RIGHT NOW!'
-                        time='09/05/2024 - 17:00:00'
+                        time={currentTime}
                         payment='10% prepaid of the total bill'
                         color='rgba(174, 217, 224, 0.56)'
+                        func={rightNow}
                     />
                     <ServiceCard
                         title='PERSONALIZE'
-                        time='DD/MM/YYYY - HH:MM:SS'
+                        time= {customizedTime==='' ? 'DD/MM/YYYY - HH:MM' : customizedTime}
                         payment='20% prepaid of the total bill'
                         color='rgba(159, 160, 195, 0.56)'
+                        func={openPicker}
                     />
                 </div>
                 <div style={{width: 1145, color: 'black', fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>Create your request(s)</div>
@@ -175,6 +238,9 @@ export default function RequestAndService() {
                     onMouseLeave={handleMouseLeave}
                 >
                     Click here to secure your order with payment!
+                </div>
+                <div className="popup">
+                    {isPicking&&<DateTime onChange={handleTimeChange}/>}
                 </div>
             </div>
         </>
