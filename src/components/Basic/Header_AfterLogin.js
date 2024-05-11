@@ -5,6 +5,11 @@ export default function ALH(props) {
         if (props.f2 === 'MAKE REQUEST')
         document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
     }
+
+    const handleFunction1 = () => {
+        if (props.f1 === 'OUR SERVICES')
+        document.getElementById('osv').scrollIntoView({behavior: 'smooth'})
+    }
     
     return (
         <div style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 24, display: 'inline-flex'}}>
@@ -16,7 +21,7 @@ export default function ALH(props) {
             </div>
             <div style={{width: '100%', background: 'rgba(106.58, 135.72, 239.05, 0.09)', borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent: 'center', alignItems: 'center', gap: 28, display: 'inline-flex'}}>
                 <div style={{width: 'fit-content', height: 44, justifyContent: 'center', alignItems: 'center', gap: 19, display: 'flex'}}>
-                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                    <div onClick={handleFunction1} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f1}</div>
                     </div>
                     <div onClick={handleFunction2} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>

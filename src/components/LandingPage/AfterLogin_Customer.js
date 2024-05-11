@@ -3,6 +3,7 @@ import ALH from "../Basic/Header_AfterLogin";
 import UpcomingContent from "./Upcoming";
 import ALF from "../Basic/Footer_AfterLogin";
 import RequestAndService from "./Request";
+import ServiceDescription from "./OurServices";
 
 export default function AfterLogin() {
     return (
@@ -16,6 +17,7 @@ export default function AfterLogin() {
                     name='Pham Quoc Viet'
                 />  
                 <UpcomingContent/>
+                <ServiceDescription/>
                 <RequestAndService/>
                 <ALF
                     content='Copyrights © 2024 duy-nq. All rights reserved'
