@@ -24,7 +24,7 @@ export default function ServiceDescription() {
             "src": "checking.png"},
         {
             "id": 4, 
-            "name": "Something else", 
+            "name": "All-In-One", 
             "description": "Experience worry-free maintenance with our complete package. From cleaning to repairs, we've got you covered.", 
             "price": 400000,
             "src": "all-in-one.png"}
@@ -44,7 +44,7 @@ export default function ServiceDescription() {
     return (
         <>
             <div id='osv' style={{overflowX:'auto',transformOrigin:'right top', overflowY:'hidden', width: '1145px', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 77, display: 'inline-flex'}}>
-                <div style={{color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>Take a look about our services!</div>
+                <div style={{color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>Take a look at our services!</div>
                 <div style={{alignSelf: 'self-start', flex: '1 1 0', justifyContent: 'center', alignItems: 'center', gap: 55, display: 'inline-flex'}}>
                     {serviceCard}
                 </div>

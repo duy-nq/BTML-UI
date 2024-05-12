@@ -1,14 +1,63 @@
 import React from "react";
+import { useState } from "react";
+import {useNavigate} from "react-router-dom";
+import YourProfile from "../Account/Profile";
+import ChangePassword from "../Account/Password";
 
 export default function ALH(props) {   
+    const navigate = useNavigate()
+
+    const [isExtended, setIsExtended] = useState(false)
+    const [displayProfile, setProfile] = useState(false)
+    const [displayPassword, setPassword] = useState(false)
+
+    const handleLogOut = () => {
+        if (window.confirm('Xác nhận đăng xuất khỏi tài khoản')) {
+            navigate('/home')
+        }
+    }
+
+    const handleProfile = () => {
+        document.querySelector('.popup').style.display = 'flex';
+        setProfile(true)
+        setPassword(false)
+    }
+    
+    const handlePassword = () => {
+        document.querySelector('.popup').style.display = 'flex';
+        setPassword(true)
+        setProfile(false)
+    }
+
     const handleFunction2 = () => {
         if (props.f2 === 'MAKE REQUEST')
-        document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
+            document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
     }
 
     const handleFunction1 = () => {
         if (props.f1 === 'OUR SERVICES')
-        document.getElementById('osv').scrollIntoView({behavior: 'smooth'})
+            document.getElementById('osv').scrollIntoView({behavior: 'smooth'})
+        else if (props.f1 === 'BACK TO HOME')
+            navigate('/customer')
+    }
+
+    const handleFunction3 = () => {
+        if (props.f3 === 'PAYMENT')
+            navigate('/payment')
+    }
+
+    const handleFunction4 = () => {
+        if (props.f4 === 'HISTORY')
+            navigate('/history')
+    }
+
+    const optionExtend = () => {
+        if (isExtended) {
+            setIsExtended(false)
+        }
+        else {
+            setIsExtended(true)
+        }
     }
     
     return (
@@ -27,21 +76,33 @@ export default function ALH(props) {
                     <div onClick={handleFunction2} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f2}</div>
                     </div>
-                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                    <div onClick={handleFunction3} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f3}</div>
                     </div>
-                    <div style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
+                    <div onClick={handleFunction4} style={{width: 'auto', alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: 'black', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.f4}</div>
                     </div>
                 </div>
                 <div style={{height: 54, justifyContent: 'flex-end', alignItems: 'center', gap: 2, display: 'flex'}}>
-                    <div style={{height: 54, padding: 10, justifyContent: 'flex-end', alignItems: 'center', gap: 10, display: 'flex'}}>
+                    <div onClick={optionExtend} style={{height: 54, padding: 10, justifyContent: 'flex-end', alignItems: 'center', gap: 10, display: 'flex'}}>
                         <div style={{textAlign: 'center', color: '#5867EC', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.name}</div>
                     </div>
-                    <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
-                        <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo"></img>
+                    <div style={{display: isExtended ? 'flex' : 'none', gap: 5}}>
+                        <div onClick={handleProfile} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
+                            <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Account management"></img>
+                        </div>
+                        <div onClick={handlePassword} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
+                            <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Change password"></img>
+                        </div>
+                        <div onClick={handleLogOut} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
+                            <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Log out"></img>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div className="popup">
+                {displayProfile && <YourProfile/>}
+                {displayPassword && <ChangePassword/>}
             </div>
         </div>
     );

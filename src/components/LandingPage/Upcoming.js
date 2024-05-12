@@ -11,7 +11,12 @@ export default function UpcomingContent() {
             <div style={{width: 'fit-content', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 19, display: 'inline-flex'}}>
                 <div style={{alignSelf: 'stretch', color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>Upcoming...</div>
                 <div style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', display: 'flex'}}>
-                    <HeaderUpcoming></HeaderUpcoming>
+                    <HeaderUpcoming
+                        col_1='#'
+                        col_2='DATE TIME'
+                        col_3='SERVICE(S)'
+                        col_4='MECHANIC(S)'
+                    />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
                         <RowUpcoming
                             id='1'

@@ -7,13 +7,17 @@ export default function YourProfile() {
         '-webkit-fill-available',
         'normal'
     ]
+
+    const closeProfile = () => {
+        document.querySelector('.popup').style.display = "none"
+    }
     
     return (
         <React.Fragment>
-            <div style={{width: '100%', height: '100%', padding: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'inline-flex'}}>
+            <div style={{scale:'80%', width: '100%', height: '100%', padding: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'inline-flex'}}>
                 <div style={{width: 1200, height: 826, paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 33, display: 'flex'}}>
                     <div style={{alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', gap: 23, display: 'inline-flex'}}>
-                        <div style={{width: 48, height: 48, position: 'relative'}}>
+                        <div onClick={closeProfile} style={{width: 48, height: 48, position: 'relative'}}>
                             <img src="close.svg" alt="Close Icon"/>
                         </div>
                     </div>
@@ -75,7 +79,6 @@ export default function YourProfile() {
                     </div>
                     <div style={{display: 'flex', alignItems: 'flex-end', flexDirection: 'row-reverse',justifyContent:'space-between', gap: 10, alignSelf: 'flex-end', paddingTop: '10px'}}>
                         <Button content='Confirm'></Button>
-                        <Button content='Change password'></Button>
                     </div>
                 </div>
             </div>
