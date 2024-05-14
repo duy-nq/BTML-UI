@@ -90,7 +90,7 @@ export default function RequestAndService() {
     }
 
     const openPicker = (event) => {
-        document.querySelector('.popup').style.display = 'flex';
+        document.querySelector('.popup-time').style.display = 'flex';
         setIsPicking(true)
 
         alert('PERSONALIZE has been picked!')
@@ -239,7 +239,7 @@ export default function RequestAndService() {
                 >
                     Click here to secure your order with payment!
                 </div>
-                <div className="popup">
+                <div className="popup-time">
                     {isPicking&&<DateTime onChange={handleTimeChange}/>}
                 </div>
             </div>

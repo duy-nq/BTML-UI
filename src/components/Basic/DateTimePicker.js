@@ -2,7 +2,7 @@ import React from "react";
 
 export default function DateTime(props) {
     const closeForm = () => {
-        document.querySelector('.popup').style.display = "none"
+        document.querySelector('.popup-time').style.display = "none"
     };
     
     return (

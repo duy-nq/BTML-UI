@@ -39,11 +39,18 @@ export default function ALH(props) {
             document.getElementById('osv').scrollIntoView({behavior: 'smooth'})
         else if (props.f1 === 'BACK TO HOME')
             navigate('/customer')
+        else if (props.f1 === 'BACK TO WORKSPACE')
+            navigate('/mechanic')
+        else if (props.f1 === 'SCHEDULE') {
+            navigate('/schedule')
+        }
     }
 
     const handleFunction3 = () => {
         if (props.f3 === 'PAYMENT')
             navigate('/payment')
+        else if (props.f3 === 'FEEDBACK') 
+            navigate('/feedback')
     }
 
     const handleFunction4 = () => {

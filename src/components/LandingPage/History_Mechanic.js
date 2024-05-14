@@ -1,19 +1,17 @@
 import React from "react";
 import ALH from "../Basic/Header_AfterLogin";
 import ALF from "../Basic/Footer_AfterLogin";
-import UpcomingSchedule from "./Upcoming_Schedule";
+import Feedback from "./Feedback";
 
-export default function AfterLoginMechanic() {
+export default function MechanicHistory() {
     return (
         <>
             <div style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 54, display: 'inline-flex'}}>
                 <ALH
-                    f1='SCHEDULE'
-                    f2='MAINTENANCE'
-                    f3='FEEDBACK'
-                    name='Hoang Van Binh'
+                    f1='BACK TO WORKSPACE'
+                    name='Pham Quoc Viet'
                 />
-                <UpcomingSchedule/>
+                <Feedback/>
                 <ALF
                     content='Copyrights © 2024 duy-nq. All rights reserved'
                 />  
