@@ -10,6 +10,7 @@ import withAuth from "./HOCs";
 import CustomerHistory from './components/LandingPage/History_Customer';
 import MechanicSchedule from './components/LandingPage/Schedule_Mechanic';
 import MechanicHistory from './components/LandingPage/History_Mechanic';
+import Maintenance from './components/Maintenance/Maintain';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path="/mechanic" element={<AfterLoginMechanic />} />
             <Route path="/schedule" element={<MechanicSchedule />} />
             <Route path="/feedback" element={<MechanicHistory />} />
+            <Route path="/maintenance" element={<Maintenance />} />
             <Route path="*" element={<Start />} />
         </Routes>
     </Router>

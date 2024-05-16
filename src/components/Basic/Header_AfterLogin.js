@@ -32,6 +32,8 @@ export default function ALH(props) {
     const handleFunction2 = () => {
         if (props.f2 === 'MAKE REQUEST')
             document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
+        else if (props.f2 === 'MAINTENANCE')
+            navigate('/maintenance')
     }
 
     const handleFunction1 = () => {
