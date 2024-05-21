@@ -1,11 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../Basic/Button";
 import TextInputS1 from "../Basic/Input";
 import './Style.css'
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+
+    const navigate = useNavigate()
+
+    var apilink = 'http://localhost:8000/api/v1/token'
+
+    useEffect(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('gmail');
+    }, []);
+
+    async function login() {        
+        try {
+            console.log("Request URL:", apilink); // Log the request URL before sending the request
+            const response = await fetch(apilink, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'Username': username, 'Password': password })
+            });
+        
+            if (!response.ok) {
+                alert('Failed to login! Please check your username and password!')
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                const data = await response.json();
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('gmail', username);
+                navigate('/customer')
+            }
+        } catch (error) {
+            console.log('Failed to login');
+        }        
+    }
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -22,7 +57,7 @@ export default function SignIn() {
 
     // Using API here to login
     const handelSubmit = () => {
-        console.log(username + ' - ' + password)
+        login()
     }
     
     return(

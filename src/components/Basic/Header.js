@@ -30,7 +30,6 @@ export default function Header() {
                 <div style={{flex: '1 1 0', alignSelf: 'center', textAlign: 'right', color: '#2E445C', fontSize: '32px', fontFamily: 'Inter', fontStyle: 'italic', fontWeight: 500, wordWrap: 'break-word'}}>FastService</div>
             </div>
             <div style={{flex: '1 1 0', height: '55px', paddingLeft: '22px', paddingRight: '22px', justifyContent: 'center', alignItems: 'center', gap: '52px', display: 'flex'}}>
-                <Button content="About Us" />
                 <Button 
                     content="Sign Up" 
                     onClick={handleSignUpClick}
