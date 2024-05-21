@@ -7,29 +7,40 @@ import RowWithFunc from "../Service/RowWithFunction";
 import DateTime from "../Basic/DateTimePicker";
 
 export default function RequestAndService() {    
-    let listOfServices = [
-        {"id": 1, "name": "Cleaning"},
-        {"id": 2, "name": "Repairing"},
-        {"id": 3, "name": "Checking"},
-        {"id": 4, "name": "Something else"}
-    ]
-      
-    let listOfAC = [
-        {"id": 1, "model": "TCL Inverter 1 HP TAC-09CSD/XAB1I"},
-        {"id": 2, "model": "Nagakawa Inverter 1 HP NIS-C09R2T28"},
-        {"id": 3, "model": "Casper Inverter 1.5 HP GC-12IS35"},
-        {"id": 4, "model": "Daikin Inverter 1 HP ATKB25YVMV"}
-    ]
+    const [listOfServices, setListOfServices] = useState([])
+    const [listOfAC, setListOfAC] = useState([])
+
+    const apiDichVu = "http://localhost:8000/api/v1/dichvu";
+    const apiAC = "http://localhost:8000/api/v1/maylanh";
+
+    useEffect(() => {
+        fetch(apiDichVu).then((res) => res.json()).then((data) => 
+            {
+                setListOfServices(data)
+            }
+        );
+
+        fetch(apiAC).then((res) => res.json()).then((data) => 
+            {
+                setListOfAC(data)
+            }
+        );
+    }, []);
 
     const [serviceId, setServiceId] = useState('')
     const [model, setModel] = useState('')
     const [listOfRequests, setList] = useState([])
+    const [sendingList, setSendingList] = useState([])
 
     const [isHovered, setIsHovered] = useState(false);
     const [isPicking, setIsPicking] = useState(false)
 
     const [currentTime, setCurrentTime] = useState('');
     const [customizedTime, setCustomizedTime] = useState('');
+    const [idPhieu, setIdPhieu] = useState(null)
+
+    const apiPhieuThongTin = "http://localhost:8000/api/v1/phieuthongtin";
+    const apiCTDV = "http://localhost:8000/api/v1/ctdv";
 
     useEffect(() => {
         // Function to get the next quarter-hour time
@@ -43,24 +54,30 @@ export default function RequestAndService() {
             now.setMinutes(nextQuarterHour);
             return now;
         };
-
+    
+        // Function to format the date and time
+        const formatDateTime = (date) => {
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+            const formattedTime = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            return `${formattedDate} - ${formattedTime}`;
+        };
+    
         // Function to update the current time every second
         const updateCurrentTime = () => {
             const now = getNextQuarterHour();
-            const date = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-            setCurrentTime(`${date} - ${time}`);
+            setCurrentTime(formatDateTime(now));
         };
-
+    
         // Update the current time initially
         updateCurrentTime();
-
+    
         // Update the current time every second
         const interval = setInterval(updateCurrentTime, 1000);
-
+    
         // Clean up the interval
         return () => clearInterval(interval);
     }, []);
+    
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -96,12 +113,18 @@ export default function RequestAndService() {
         alert('PERSONALIZE has been picked!')
     }
 
-    function getServiceById(id) {
-        var numId = parseInt(id)
-        
+    function getServiceById(id) {       
         for (let i = 0; i < listOfServices.length; i++) {
-            if (listOfServices[i].id === numId) {
-                return listOfServices[i].name;
+            if (listOfServices[i].IdDV === id) {
+                return listOfServices[i].Ten;
+            }
+        }
+    }
+
+    function getIdByAC(ac) {       
+        for (let i = 0; i < listOfAC.length; i++) {
+            if (listOfAC[i].Ten === String(ac)) {
+                return listOfAC[i].IdML;
             }
         }
     }
@@ -119,18 +142,32 @@ export default function RequestAndService() {
             "quantity": parseInt(document.getElementById('quantity').value)
         }
 
+        let sRequest = {
+            "id": 0, 
+            "IdDV": serviceId, 
+            "IdML": getIdByAC(model), 
+            "SoLuong": parseInt(document.getElementById('quantity').value)
+        }
+
         const existingRequestIndex = listOfRequests.findIndex((item) => 
             item.service === request.service && item.model === request.model
         )        
 
         if (existingRequestIndex !== -1) {
             const updatedRequests = [...listOfRequests]
+            const updatedSendingList = [...sendingList]
+            
             updatedRequests[existingRequestIndex].quantity = request.quantity
+            updatedSendingList[existingRequestIndex].SoLuong = request.quantity
+            
             setList(updatedRequests)
+            setSendingList(updatedSendingList)
         }
         else {
             request.id = listOfRequests.length+1
+            sRequest.id = sendingList.length+1
             setList([...listOfRequests, request])
+            setSendingList([...sendingList, sRequest])
         }
     }
 
@@ -148,6 +185,87 @@ export default function RequestAndService() {
         const updatedRequests = listOfRequests.filter(item => item.id !== id);
         setList(updatedRequests);
         reassignIds(updatedRequests);        
+    }   
+
+    function isoDateTime(dt) {
+        const parts = dt.split(" - ");
+        const datePart = parts[0];
+        const timePart = parts[1];
+        const [day, month, year] = datePart.split("/");
+        const [hour, minute] = timePart.split(":");
+
+        return `${year}-${month}-${day}T${hour}:${minute}:00.000Z`;
+    }
+
+    async function postPhieuThongTin() {
+        try {
+            const response = await fetch(apiPhieuThongTin, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    'IdKH': localStorage.getItem('IdKH'), 
+                    'LichHen': customizedTime !== '' ? isoDateTime(customizedTime) : isoDateTime(currentTime), 
+                    'TrangThai': true, 
+                })
+            });
+
+            console.log(JSON.stringify({ 
+                'IdKH': localStorage.getItem('IdKH'), 
+                'LichHen': customizedTime !== '' ? isoDateTime(customizedTime) : isoDateTime(currentTime), 
+                'TrangThai': true, 
+            }))
+
+            if (!response.ok) {
+                alert('Failed to create your request!')
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                const data = await response.json();
+                setIdPhieu(data.IdPhieu)
+            }
+        } catch (error) {
+            console.log('Failed to create your request!');
+        }
+    }
+
+    async function postCTDV() {
+        try {
+            for (let i = 0; i < sendingList.length; i++) {
+                const response = await fetch(apiCTDV, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        'IdPhieu': idPhieu, 
+                        'IdML': sendingList[i].IdML, 
+                        'IdDV': sendingList[i].IdDV, 
+                        'SoLuong': sendingList[i].SoLuong, 
+                    })
+                });
+
+                console.log(JSON.stringify({ 
+                    'IdPhieu': idPhieu, 
+                    'IdML': sendingList[i].IdML, 
+                    'IdDV': sendingList[i].IdDV, 
+                    'SoLuong': sendingList[i].SoLuong, 
+                }));
+
+                if (!response.ok) {
+                    alert('Failed to create detail order!')
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            }
+        } catch (error) {
+            console.log('Failed to create detail order!');
+        }
+
+        alert('Detail order has been created successfully!')
+        localStorage.setItem('IdPhieu', idPhieu)
+        setIdPhieu(null)
+        window.open('http://localhost:3000/pd', '_blank')
+        window.location.reload()        
     }
 
     const handlePayment = () => {      
@@ -163,9 +281,16 @@ export default function RequestAndService() {
             alert('You are choosing RIGHT NOW! plan: ' + currentTime)
         }
         
-        if (window.confirm('Redirect to payment page, cannot go back to this step! Are you sure?'))
-            window.open('https://example.com', '_blank')
+        if (window.confirm('Redirect to payment page, cannot go back to this step! Are you sure?')) {
+            postPhieuThongTin()
+        }
     }
+
+    useEffect(() => {
+        if (idPhieu) {
+            postCTDV(idPhieu); // Call postCTDV when idPhieu changes
+        }
+    }, [idPhieu]);
 
     const displayedRows = listOfRequests.map((item) => {
         return (
@@ -189,14 +314,14 @@ export default function RequestAndService() {
                     <ServiceCard
                         title='RIGHT NOW!'
                         time={currentTime}
-                        payment='10% prepaid of the total bill'
+                        payment='15% prepaid of the total services'
                         color='rgba(174, 217, 224, 0.56)'
                         func={rightNow}
                     />
                     <ServiceCard
                         title='PERSONALIZE'
                         time= {customizedTime==='' ? 'DD/MM/YYYY - HH:MM' : customizedTime}
-                        payment='20% prepaid of the total bill'
+                        payment='15% prepaid of the total services'
                         color='rgba(159, 160, 195, 0.56)'
                         func={openPicker}
                     />
@@ -207,15 +332,15 @@ export default function RequestAndService() {
                         <ComboBox
                             label='Service'
                             list={listOfServices}
-                            nameProp='name'
-                            valueProp='id'
+                            nameProp='Ten'
+                            valueProp='IdDV'
                             func={handleIdChange}
                         />
                         <ComboBox
                             label='AC Type'
                             list={listOfAC}
-                            nameProp='model'
-                            valueProp='model'
+                            nameProp='Ten'
+                            valueProp='Ten'
                             func={handleModelChange}
                         />
                         <NumberBox

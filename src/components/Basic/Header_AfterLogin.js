@@ -13,6 +13,13 @@ export default function ALH(props) {
 
     const handleLogOut = () => {
         if (window.confirm('Xác nhận đăng xuất khỏi tài khoản')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('gmail');
+            localStorage.removeItem('IdNV');
+            localStorage.removeItem('IdKH');
+            localStorage.removeItem('HoTen');
+            localStorage.removeItem('IdPhieu');
+
             navigate('/home')
         }
     }
@@ -94,7 +101,7 @@ export default function ALH(props) {
                 </div>
                 <div style={{height: 54, justifyContent: 'flex-end', alignItems: 'center', gap: 2, display: 'flex'}}>
                     <div onClick={optionExtend} style={{height: 54, padding: 10, justifyContent: 'flex-end', alignItems: 'center', gap: 10, display: 'flex'}}>
-                        <div style={{textAlign: 'center', color: '#5867EC', fontSize: 28, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>{props.name}</div>
+                        <div style={{textAlign: 'center', color: '#5867EC', fontSize: 28, fontFamily: 'Inter', fontWeight: '200', wordWrap: 'break-word'}}>{localStorage.getItem('HoTen')}</div>
                     </div>
                     <div style={{display: isExtended ? 'flex' : 'none', gap: 5}}>
                         <div onClick={handleProfile} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>

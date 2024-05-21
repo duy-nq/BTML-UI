@@ -11,7 +11,7 @@ export default function AfterLoginMechanic() {
                     f1='SCHEDULE'
                     f2='MAINTENANCE'
                     f3='FEEDBACK'
-                    name='Hoang Van Binh'
+                    name={localStorage.getItem('HoTen')}
                 />
                 <UpcomingSchedule/>
                 <ALF

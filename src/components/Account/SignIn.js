@@ -8,18 +8,21 @@ export default function SignIn() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
+    useEffect(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('gmail');
+        localStorage.removeItem('IdNV');
+        localStorage.removeItem('IdKH');
+        localStorage.removeItem('HoTen');
+    },[]);
+
     const navigate = useNavigate()
 
     var apilink = 'http://localhost:8000/api/v1/token'
 
-    useEffect(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('gmail');
-    }, []);
-
     async function login() {        
         try {
-            console.log("Request URL:", apilink); // Log the request URL before sending the request
+            console.log("Request URL:", apilink);
             const response = await fetch(apilink, {
                 method: 'POST',
                 headers: {
@@ -35,7 +38,21 @@ export default function SignIn() {
                 const data = await response.json();
                 localStorage.setItem('token', data.access_token);
                 localStorage.setItem('gmail', username);
-                navigate('/customer')
+
+                const link = 'http://localhost:8000/api/v1/users/me' + '?token=' + localStorage.getItem('token');
+
+                fetch(link).then(response => response.json()).then(data => {
+                    if (data.IdNV !== undefined) {
+                        console.log(data.IdNV)
+                        localStorage.setItem('IdNV', data.IdNV);
+                        localStorage.setItem('HoTen', data.HoTen);
+                        navigate('/mechanic')
+                    } else if (data.IdKH !== undefined) {
+                        localStorage.setItem('IdKH', data.IdKH);
+                        localStorage.setItem('HoTen', data.HoTen);
+                        navigate('/customer')
+                    }
+                });
             }
         } catch (error) {
             console.log('Failed to login');
@@ -52,16 +69,14 @@ export default function SignIn() {
 
     const closeSignIn = () => {
         document.querySelector('.popup').style.display = "none"
-        console.log('imhere')
     };
 
-    // Using API here to login
     const handelSubmit = () => {
         login()
     }
     
     return(
-        <div className="signin" style={{scale:'80%', zIndex:999 , width: '800', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
+        <div className="signin" style={{zIndex:999 , width: '1000', height: '800', paddingLeft: 24, paddingRight: 24, paddingTop: 19, paddingBottom: 19, background: 'rgba(147, 168, 244, 0.56)', borderRadius: 53, overflow: 'hidden', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 33, display: 'inline-flex'}}>
             <div style={{alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', gap: 23, display: 'inline-flex'}}>
                 <div onClick={closeSignIn} style={{width: 48, height: 48, position: 'relative'}}>
                     <img src="close.svg" alt="Close Icon"/>
@@ -69,11 +84,6 @@ export default function SignIn() {
             </div>
             <div style={{padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex'}}>
                 <div style={{textAlign: 'center', color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>SIGN IN</div>
-            </div>
-            <div style={{width: 736, height: 75, justifyContent: 'center', alignItems: 'center', gap: 70, display: 'inline-flex'}}>
-                <div style={{width: 306, textAlign: 'center', color: 'black', fontSize: 32, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>CUSTOMER</div>
-                <div style={{width: 0, height: 61.50, border: '2px black solid'}}></div>
-                <div style={{width: 306, textAlign: 'center', color: 'black', fontSize: 32, fontFamily: 'Inria Sans', fontWeight: '400', wordWrap: 'break-word'}}>MECHANIC</div>
             </div>
             <TextInputS1
                 id='username'

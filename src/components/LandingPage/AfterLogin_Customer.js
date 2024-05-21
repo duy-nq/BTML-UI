@@ -14,7 +14,7 @@ export default function AfterLogin() {
                     f2='MAKE REQUEST'
                     f3='PAYMENT'
                     f4='HISTORY'
-                    name='Pham Quoc Viet'
+                    name={localStorage.getItem('HoTen')}
                 />  
                 <UpcomingContent/>
                 <ServiceDescription/>
