@@ -7,6 +7,9 @@ export default function ChangePassword() {
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
+    const apiPasswordNV = 'http://localhost:8000/api/v1/nhanvien/password/{id}?IdNV=' + localStorage.getItem('IdNV')
+    const apiPasswordKH = 'http://localhost:8000/api/v1/khachhang/password/{id}?IdKH=' + localStorage.getItem('IdKH')
+
     const handleOPChange = (event) => {
         setOldPassword(event.target.value);
     };
@@ -24,8 +27,28 @@ export default function ChangePassword() {
     }
 
     // Using API here to login
-    const handelSubmit = () => {
-        console.log(oldPassword + ' - ' + newPassword + ' - ' + confirmPassword)
+    const handelSubmit = async() => {
+        if (newPassword !== confirmPassword) {
+            alert('Hai mật khẩu mới chưa trùng khớp!')
+            return
+        }
+
+        const response = await fetch(localStorage.getItem('IdNV') !== null ? apiPasswordNV : apiPasswordKH, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 'OldPassword': oldPassword, 'NewPassword': newPassword})
+        });
+
+        if (!response.ok) {
+            alert('Failed to change password! Please check your old password!')
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        else {
+            alert('Change password successfully!')
+            window.location.reload()
+        }
     }
     
     return (

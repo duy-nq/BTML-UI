@@ -4,6 +4,7 @@ import TextInputS1 from "../Basic/Input";
 import './Style.css'
 import { useNavigate } from "react-router-dom";
 
+
 export default function SignIn() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -19,10 +20,11 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     var apilink = 'http://localhost:8000/api/v1/token'
+    var resetNV = 'http://localhost:8000/api/v1/nhanvien/reset/'
+    var resetKH = 'http://localhost:8000/api/v1/khachhang/reset/'
 
     async function login() {        
         try {
-            console.log("Request URL:", apilink);
             const response = await fetch(apilink, {
                 method: 'POST',
                 headers: {
@@ -67,6 +69,63 @@ export default function SignIn() {
         setPassword(event.target.value);
     };
 
+    const resetPassword = async() => {
+        if (username === '') {
+            alert('Please enter your email (username)!')
+            return;
+        }
+
+        const api = 'http://localhost:8000/api/v1/reset-password'
+
+        const response = await fetch(api, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 'email': [username] })
+        });
+
+        if (!response.ok) {
+            alert('Failed to reset password! Please check your email (username)!')
+            throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+            alert('Reset password successfully! Please check your mail inbox!')
+
+            const pwd = await response.text();
+            let real_pwd = pwd.slice(1, -1)
+
+            // try both link to reset password, if one of them is not working, the other will work
+            const change = await fetch(resetNV, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'Email': username, 'Password': real_pwd })
+            });
+
+            if (!change.ok) {
+                console.log('Failed to reset password! Please check your email (username)!')
+            } else {
+                console.log('Reset successfully!')
+                return;
+            }
+
+            const change01 = await fetch(resetKH, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'Email': username, 'Password': real_pwd })
+            });
+
+            if (!change01.ok) {
+                throw new Error(`HTTP error! status: ${change01.status}`);
+            } else {
+                console.log('Reset successfully!')
+            }
+        }
+    }
+
     const closeSignIn = () => {
         document.querySelector('.popup').style.display = "none"
     };
@@ -100,7 +159,7 @@ export default function SignIn() {
                 onChange={handlePasswordChange}
             />            
             <div style={{alignSelf: 'stretch', padding: 10, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex'}}>
-                <div style={{flex: '1 1 0', textAlign: 'center', color: 'black', fontSize: 24, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>Forget your password?</div>
+                <div onClick={resetPassword} style={{flex: '1 1 0', textAlign: 'center', color: 'black', fontSize: 24, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>Forget your password?</div>
             </div>
             <Button content="Sign In" onClick={handelSubmit}/>
         </div>
