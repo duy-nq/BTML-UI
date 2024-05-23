@@ -4,12 +4,15 @@ import RowPD from "./Row_PD";
 import Button01 from "../Basic/Button_01";
 import RowWithNotification from "./Row_WithNotification";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PaymentDetails() {
     const [listOfServices, setListOfServices] = useState([])
     const [listOfSpareParts, setListOfSpareParts] = useState([])
     const [prePayment, setPrePayment] = useState(0)
     const [link, setLink] = useState(null)
+
+    const navigate = useNavigate();
 
     const apiHDDV = "http://localhost:8000/api/v1/total-service/{id}/?IdPhieu=";
     const apiHDLK = "http://localhost:8000/api/v1/total-sp/{id}/?IdPhieu=";
@@ -109,7 +112,11 @@ export default function PaymentDetails() {
         if (window.confirm('Xác nhận thanh toán?')) {
             payment().then(data => {
                 let temp = data.split('"')
-                console.log(temp[1])
+                window.open(temp[1], '_blank')
+                // wait for 5 seconds
+                setTimeout(() => {
+                    navigate('/customer')
+                }, 3000)
             })
         }
         else {

@@ -265,7 +265,10 @@ export default function RequestAndService() {
         localStorage.setItem('IdPhieu', idPhieu)
         setIdPhieu(null)
         window.open('http://localhost:3000/pd', '_blank')
-        window.location.reload()        
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000)
     }
 
     const handlePayment = () => {      
