@@ -13,14 +13,8 @@ export default function ALH(props) {
 
     const handleLogOut = () => {
         if (window.confirm('Xác nhận đăng xuất khỏi tài khoản')) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('gmail');
-            localStorage.removeItem('IdNV');
-            localStorage.removeItem('IdKH');
-            localStorage.removeItem('HoTen');
-            localStorage.removeItem('IdPhieu');
-
-            navigate('/home')
+            localStorage.clear();
+            navigate('/')
         }
     }
 
@@ -42,7 +36,8 @@ export default function ALH(props) {
         else if (props.f2 === 'MAINTENANCE')
             if (localStorage.getItem('IdPhieu') === null)
                 alert('You have no ongoing maintenance')
-            else navigate('/maintenance')
+            else 
+            navigate('/maintenance')
     }
 
     const handleFunction1 = () => {

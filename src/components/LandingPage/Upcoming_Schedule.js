@@ -38,13 +38,14 @@ export default function UpcomingSchedule() {
             );
         }));
 
-        const currentTime = new Date();
-        const thirtyMinutesAfter = new Date(currentTime.getTime() + 30700000);
+        const stime = new Date();
+        const thirtyMinutesAfter = new Date(stime.getTime() + 30700000);
+        const thirtyMinutesBefore = new Date(stime.getTime() + 23000000);
 
-        console.log(thirtyMinutesAfter.toISOString());
-        
+        console.log(thirtyMinutesBefore.toISOString(), thirtyMinutesAfter.toISOString());
+
         setOnGoing(schedule.map((item, index) => {
-            if (item.ThoiGian < thirtyMinutesAfter.toISOString()) {
+            if (item.ThoiGian < thirtyMinutesAfter.toISOString() && item.ThoiGian > thirtyMinutesBefore.toISOString()) {
                 localStorage.setItem('IdPhieu', item.IdPhieu)
                 return(
                 <RowUpcomingSchedule
@@ -90,7 +91,7 @@ export default function UpcomingSchedule() {
                         col_4='LOCATION'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {onGoing.length !== 0 ? onGoing : <RowWithNotification message='No ongoing job'/>}
+                        {onGoing[0] !== undefined ? onGoing : <RowWithNotification message='No ongoing job'/>}
                     </div>
                 </div>
                 <div style={{alignSelf: 'stretch', color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>What's next?</div>

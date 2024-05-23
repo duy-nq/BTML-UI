@@ -15,8 +15,10 @@ export default function Maintenance() {
     const [service_ac, setServiceAC] = useState('')
     const [isDisplayed, setDisplay] = useState(false)
     const [listOfServices, setListOfServices] = useState([])
+    const [toDoList, setToDoList] = useState([])
 
     const apiDichVu = "http://localhost:8000/api/v1/dichvu";
+    const apiCTDV = "http://localhost:8000/api/v1/phieuthongtin/chitiet/{id}?IdPhieu=" + localStorage.getItem('IdPhieu');
 
     useEffect(() => {
         if (service_ac === '') {
@@ -28,16 +30,19 @@ export default function Maintenance() {
     useEffect(() => {
         localStorage.setItem('sub', '')
     
-        fetch(apiDichVu).then((res) => res.json()).then((data) => 
-            {
-                setListOfServices(data)
-                console.log(data)
-            }
-        );
+        fetch(apiDichVu).then((res) => res.json()).then((data) => {
+            setListOfServices(data)
+        });
+
+        fetch(apiCTDV).then((res) => res.json()).then((data) => {
+            setToDoList(data)
+        })
     },[])
 
     const getData = (childData) => {        
         const existingIndex = data.findIndex(item => item.sub === localStorage.getItem("sub"))
+
+        console.log(existingIndex)
 
         data[existingIndex].Serial = childData.Serial
         data[existingIndex].Addon = childData.Addon
@@ -55,53 +60,6 @@ export default function Maintenance() {
         else {
             return;
         }
-    }    
-
-    const toDoList = [
-        {
-            "IdCT": 'doityourself',
-            "IdDV": 1,
-            "LoaiML": "Daikin 5AKD-1HW",
-            "SoLuong": 2,
-        },
-        {
-            "IdCT": 'idontcare',
-            "IdDV": 2,
-            "LoaiML": "LG S8C5-12KW",
-            "SoLuong": 1,
-        }
-    ]
-
-    useEffect(() => {
-        const transformToDoList = () => {
-            let transformedData = [];
-
-            toDoList.forEach((item, index) => {
-                let componentId = index + 1
-
-                for (let i = 0; i < item.SoLuong; i++) {
-                    transformedData.push({
-                        IdCT: item.IdCT,
-                        Serial: '',
-                        Addon: [],
-                        sub: componentId.toString()+'.'+(i+1).toString()
-                    });
-                }
-            });
-
-            return transformedData;
-        };
-
-        // Call the transformation function and set the state
-        setData(transformToDoList());
-    }, []);
-
-    function getServiceById(id) {       
-        for (let i = 0; i < listOfServices.length; i++) {
-            if (listOfServices[i].IdDV === id) {
-                return listOfServices[i].Ten;
-            }
-        }
     }
 
     const tdlRows = toDoList.map((item, index) => {
@@ -114,7 +72,7 @@ export default function Maintenance() {
             components.push(
                 <RowMaintenance
                     id={componentId.toString()+sub} // Convert to string if id is expected as a string
-                    service={getServiceById(item.IdDV)}
+                    service={item.LoaiDV}
                     ac={item.LoaiML}
                     action='Modify'
                     getTask={changeTask}
@@ -125,6 +83,30 @@ export default function Maintenance() {
         
         return components;
     })
+
+    const transformToDoList = () => {
+        let transformedData = [];
+
+        toDoList.forEach((item, index) => {
+            let componentId = index + 1
+
+            for (let i = 0; i < item.SoLuong; i++) {
+                transformedData.push({
+                    IdCT: item.IdCT,
+                    Serial: '',
+                    Addon: [],
+                    sub: componentId.toString()+'.'+(i+1).toString()
+                });
+            }
+        });
+
+        console.log(transformedData)
+        return transformedData;
+    };
+
+    useEffect(() => {
+        setData(transformToDoList())
+    }, [toDoList.length])
     
     return (
         <>

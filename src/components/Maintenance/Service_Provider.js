@@ -7,25 +7,28 @@ import TextInputS1 from "../Basic/Input";
 import { useEffect } from "react";
 
 export default function ServiceProvider(props) {    
-    let listOfProviders = [
-        {"id": 1, "name": "LG"},
-        {"id": 2, "name": "Daikin"},
-        {"id": 3, "name": "Nagakawa"},
-        {"id": 4, "name": "Casper"}
-    ]
+    // let listOfProviders = [
+    //     {"id": 1, "name": "LG"},
+    //     {"id": 2, "name": "Daikin"},
+    //     {"id": 3, "name": "Nagakawa"},
+    //     {"id": 4, "name": "Casper"}
+    // ]
       
-    let listOfSP = [
-        {"id": 1, "prov": 1, "model": "Gas Tube 0.75L"},
-        {"id": 2, "prov": 1, "model": "Mainboard"},
-        {"id": 3, "prov": 2, "model": "Filter 2 layers"},
-        {"id": 4, "prov": 3, "model": "Fan 100kJ"},
-        {"id": 5, "prov": 4, "model": "Fan 100kJ"}
-    ]
+    // let listOfSP = [
+    //     {"id": 1, "prov": 1, "model": "Gas Tube 0.75L"},
+    //     {"id": 2, "prov": 1, "model": "Mainboard"},
+    //     {"id": 3, "prov": 2, "model": "Filter 2 layers"},
+    //     {"id": 4, "prov": 3, "model": "Fan 100kJ"},
+    //     {"id": 5, "prov": 4, "model": "Fan 100kJ"}
+    // ]
 
     const [serviceId, setServiceId] = useState('')
     const [model, setModel] = useState('')
     const [serial, setSerial] = useState('')
     const [listOfAddOn, setList] = useState([])
+    const [listOfProviders, setProviders] = useState([])
+    const [listOfSP, setListOfSP] = useState([])
+    const [listOfLK, setLK] = useState([])
     const [isHovered, setIsHovered] = useState(false)
 
     const [fileteredSP, setSP] = useState([])
@@ -42,13 +45,27 @@ export default function ServiceProvider(props) {
         setSerial(event.target.value)
     }
 
+    const apiLKCC = "http://localhost:8000/api/v1/lk_ncc/chitiet";
+    const apiNCC = "http://localhost:8000/api/v1/ncc";
+    const apiLK = "http://localhost:8000/api/v1/linhkien";
+
+    useEffect(() => {
+        fetch(apiLKCC).then((res) => res.json()).then((data) => {
+            setListOfSP(data)
+        })
+        fetch(apiNCC).then((res) => res.json()).then((data) => {
+            setProviders(data)
+        })
+        fetch(apiLK).then((res) => res.json()).then((data) => {
+            setLK(data)
+        })
+    }, [])
+
     useEffect(() => {
         document.getElementById('mtn').style.display='inline-flex'
         
         const sub = localStorage.getItem('sub');
         const existingItem = props.preData.find(item => item.sub.toString() === sub);
-
-        console.log('imcallingyou', sub)
     
         if (existingItem) {
             const { Serial, Addon } = existingItem;
@@ -62,6 +79,11 @@ export default function ServiceProvider(props) {
             }
         }
     }, [props.task]);
+
+    useEffect(() => {
+        const filteredList = listOfSP.filter(sp => sp.IdCC === serviceId);
+        setSP(filteredList);
+    }, [serviceId]);
     
 
     const handleSave = () => {
@@ -86,34 +108,33 @@ export default function ServiceProvider(props) {
 
     const handleIdChange = (event) => {
         setServiceId(event.target.value)
-        setModel('')
+        document.getElementById('sp').value = ''
     }
-
-    useEffect(() => {
-        const filteredList = listOfSP.filter(sp => sp.prov === parseInt(serviceId));
-        setSP(filteredList);
-    }, [serviceId]);
 
     const handleModelChange = (event) => {
         setModel(event.target.value)
     }
 
-    function getServiceById(id) {
-        var numId = parseInt(id)
-        
+    function getServiceById(id) {        
         for (let i = 0; i < listOfProviders.length; i++) {
-            if (listOfProviders[i].id === numId) {
-                return listOfProviders[i].name;
+            if (listOfProviders[i].IdCC === id) {
+                return listOfProviders[i].Ten;
             }
         }
     }
 
-    function getSPById(id) {
-        var numId = parseInt(id)
-        
+    function getSPById(id) {        
         for (let i = 0; i < listOfSP.length; i++) {
-            if (listOfSP[i].id === numId) {
-                return listOfSP[i].model;
+            if (listOfSP[i].IdLK === id) {
+                return listOfSP[i].Ten;
+            }
+        }
+    }
+
+    function getLKById(id) {       
+        for (let i = 0; i < listOfLK.length; i++) {
+            if (listOfLK[i].IdLK === id) {
+                return listOfLK[i].Ten;
             }
         }
     }
@@ -178,7 +199,7 @@ export default function ServiceProvider(props) {
     return (
         <>
             <div id="mtn" style={{width: 'fit-content', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 31, display: props.show ? 'inline-flex':'none'}}>
-                <div style={{width: 1145, color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>{props.task}</div>
+                <div style={{width: 1145, color: 'black', fontSize: 48, fontFamily: 'Inter', fontWeight: '600', wordWrap: 'break-word'}}>{props.task}</div>
                 <div style={{width: 1145, color: 'black', fontSize: 36, fontFamily: 'Inria Sans', fontStyle: 'italic', fontWeight: '400', wordWrap: 'break-word'}}>AC Serial</div>
                 <div>
                     <TextInputS1 id="serial" font='Inria Sans' onChange={handleSerialChange}></TextInputS1>
@@ -189,16 +210,18 @@ export default function ServiceProvider(props) {
                         <ComboBox
                             label='Provider'
                             list={listOfProviders}
-                            nameProp='name'
-                            valueProp='id'
+                            nameProp='Ten'
+                            valueProp='IdCC'
                             func={handleIdChange}
+                            id='ncc'
                         />
                         <ComboBox
                             label='Spare part'
                             list={fileteredSP}
-                            nameProp='model'
-                            valueProp='id'
+                            nameProp='Ten'
+                            valueProp='IdLK'
                             func={handleModelChange}
+                            id='sp'
                         />
                         <NumberBox
                             label='Quantity'
