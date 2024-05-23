@@ -40,7 +40,9 @@ export default function ALH(props) {
         if (props.f2 === 'MAKE REQUEST')
             document.getElementById('rns').scrollIntoView({behavior: 'smooth'})
         else if (props.f2 === 'MAINTENANCE')
-            navigate('/maintenance')
+            if (localStorage.getItem('IdPhieu') === null)
+                alert('You have no ongoing maintenance')
+            else navigate('/maintenance')
     }
 
     const handleFunction1 = () => {

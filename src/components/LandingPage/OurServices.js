@@ -3,34 +3,6 @@ import ServiceCard from "../Basic/Card_Service";
 import { useState, useEffect } from "react";
 
 export default function ServiceDescription() {
-    // let listOfServices = [
-    //     {
-    //         "id": 1, 
-    //         "name": "Cleaning", 
-    //         "description": "Breathe fresh air with our meticulous cleaning. Eliminate dust and allergens for healthier indoor living.", 
-    //         "price": 150000,
-    //         "src": "cleaning.png"
-    //     },
-    //     {
-    //         "id": 2, 
-    //         "name": "Repairing", 
-    //         "description": "Stay cool with our swift repairs. Resolve AC issues for uninterrupted comfort.", 
-    //         "price": 250000,
-    //         "src": "repairing.png"},
-    //     {
-    //         "id": 3, 
-    //         "name": "Checking", 
-    //         "description": "Ensure peak performance with our thorough checks. Detect and prevent problems early for smooth AC operation.", 
-    //         "price": 150000,
-    //         "src": "checking.png"},
-    //     {
-    //         "id": 4, 
-    //         "name": "All-In-One", 
-    //         "description": "Experience worry-free maintenance with our complete package. From cleaning to repairs, we've got you covered.", 
-    //         "price": 400000,
-    //         "src": "all-in-one.png"}
-    // ]
-
     const [listOfServices, setListOfServices] = useState([])
 
     const apiDichVu = "http://localhost:8000/api/v1/dichvu";
@@ -38,7 +10,6 @@ export default function ServiceDescription() {
     useEffect(() => {
         fetch(apiDichVu).then((res) => res.json()).then((data) => 
             {
-                console.log(data);
                 setListOfServices(data)
             }
         );

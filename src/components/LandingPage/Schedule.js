@@ -1,9 +1,61 @@
 import React from "react";
 import HeaderUpcoming from "./Header_Upcoming";
 import RowUpcomingSchedule from "./Row_UpS";
+import { useState, useEffect } from 'react';
 
 export default function Schedule() {
-    let services = ['Cleaning', 'Repairing', 'Checking']
+    const [schedule, setSchedule] = useState([]);
+    const [display, setDisplay] = useState([]);
+    const apiPhieu = 'http://localhost:8000/api/v1/nhanvien/phieu/{id}?IdNV=' + localStorage.getItem('IdNV');
+      
+    useEffect(() => {
+        fetch(apiPhieu).then((res) => res.json()).then((data) =>{
+            setSchedule(data)
+        })
+    }, []);
+
+    useEffect(() => {
+        if (schedule.length === 0) {
+            return
+        }  
+
+        setDisplay(schedule.map((item, index) => {
+            if (item.ThoiGian < new Date().toISOString()) {
+                return null
+            }
+            
+            return(
+                <RowUpcomingSchedule
+                    id={index + 1}
+                    time={formatDate(item.ThoiGian)}
+                    services={item.ListOfService}
+                    location={item.DiaChi}
+                />
+            );
+        }));   
+        
+    }, [schedule.length]);
+
+    function formatDate(dateString) {
+        // Create a new Date object from the input date string
+        const date = new Date(dateString);
+    
+        // Extract the day, month, and year
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+    
+        // Extract the hours and minutes
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        // Format the date and time as required
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    
+        return formattedDate;
+    }
+    
     
     return (
         <>
@@ -17,36 +69,7 @@ export default function Schedule() {
                         col_4='LOCATION'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        <RowUpcomingSchedule
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            location='89/24 Co Giang, Phu Nhuan'
-                        />
-                        <RowUpcomingSchedule
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            location='89/24 Co Giang, Phu Nhuan'
-                        />
-                        <RowUpcomingSchedule
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            location='89/24 Co Giang, Phu Nhuan'
-                        />
-                        <RowUpcomingSchedule
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            location='89/24 Co Giang, Phu Nhuan'
-                        />
-                        <RowUpcomingSchedule
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            location='89/24 Co Giang, Phu Nhuan'
-                        />
+                        {display}
                     </div>
                 </div>
             </div>

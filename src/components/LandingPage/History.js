@@ -1,8 +1,15 @@
 import React from "react";
 import HeaderPD from "./Header_PD";
 import RowHistory from "./Row_History";
-
+import { useState, useEffect } from "react";
 export default function History() {  
+    const [data, setData] = useState([]);
+    
+
+    useEffect(() => {
+
+    }, []);
+    
     return(
         <>
             <div style={{width: 'fit-content', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 19, display: 'inline-flex'}}>

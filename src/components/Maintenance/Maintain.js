@@ -14,6 +14,9 @@ export default function Maintenance() {
     const [data, setData] = useState([])
     const [service_ac, setServiceAC] = useState('')
     const [isDisplayed, setDisplay] = useState(false)
+    const [listOfServices, setListOfServices] = useState([])
+
+    const apiDichVu = "http://localhost:8000/api/v1/dichvu";
 
     useEffect(() => {
         if (service_ac === '') {
@@ -24,6 +27,13 @@ export default function Maintenance() {
 
     useEffect(() => {
         localStorage.setItem('sub', '')
+    
+        fetch(apiDichVu).then((res) => res.json()).then((data) => 
+            {
+                setListOfServices(data)
+                console.log(data)
+            }
+        );
     },[])
 
     const getData = (childData) => {        
@@ -45,14 +55,7 @@ export default function Maintenance() {
         else {
             return;
         }
-    }
-
-    let listOfServices = [
-        {"id": 1, "name": "Cleaning"},
-        {"id": 2, "name": "Repairing"},
-        {"id": 3, "name": "Checking"},
-        {"id": 4, "name": "Something else"}
-    ]
+    }    
 
     const toDoList = [
         {
@@ -93,12 +96,10 @@ export default function Maintenance() {
         setData(transformToDoList());
     }, []);
 
-    function getServiceById(id) {
-        var numId = parseInt(id)
-        
+    function getServiceById(id) {       
         for (let i = 0; i < listOfServices.length; i++) {
-            if (listOfServices[i].id === numId) {
-                return listOfServices[i].name;
+            if (listOfServices[i].IdDV === id) {
+                return listOfServices[i].Ten;
             }
         }
     }

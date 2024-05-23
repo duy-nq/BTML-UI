@@ -1,10 +1,91 @@
 import React from "react";
 import HeaderUpcoming from "./Header_Upcoming";
 import RowUpcoming from "./Row_Upcoming";
+import { useState, useEffect } from "react";
 
 export default function UpcomingContent() {
-    let services = ['Cleaning', 'Repairing', 'Checking']
-    let mechanics = ['Joe J.', 'Wesley O.']
+    const [data, setData] = React.useState([]);
+    const [listOfServices, setListOfServices] = useState([])
+    const [listOfMechanics, setListOfMechanics] = useState([])
+
+    const apiKH = 'http://localhost:8000/api/v1/khachhang/{id}?IdKH=' + localStorage.getItem('IdKH');
+    const apiDichVu = "http://localhost:8000/api/v1/dichvu";
+    const apiNhanVien = "http://localhost:8000/api/v1/nhanvien";
+
+    useEffect(() => {
+        fetch(apiDichVu).then((res) => res.json()).then((data) => 
+            {
+                setListOfServices(data)
+            }
+        );
+        fetch(apiKH)
+            .then(response => response.json())
+            .then(data => {
+                setData(data.requests);
+            });
+        fetch(apiNhanVien).then((res) => res.json()).then((data) =>{
+            setListOfMechanics(data)
+        });
+    }, []);
+
+    function formatDate(dateString) {
+        // Create a new Date object from the input date string
+        const date = new Date(dateString);
+    
+        // Extract the day, month, and year
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+    
+        // Extract the hours and minutes
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        // Format the date and time as required
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    
+        return formattedDate;
+    }
+
+    function getServiceById(id) {       
+        for (let i = 0; i < listOfServices.length; i++) {
+            if (listOfServices[i].IdDV === id) {
+                return listOfServices[i].Ten;
+            }
+        }
+    }
+
+    function getMechanicById(id) {
+        for (let i = 0; i < listOfMechanics.length; i++) {
+            if (listOfMechanics[i].IdNV === id) {
+                return listOfMechanics[i].HoTen;
+            }
+        }
+    }
+
+    const displayData = data.map((item, index) => {
+        if (item.LichHen < new Date().toISOString()) {
+            return null;
+        }
+        
+        return (
+            <RowUpcoming
+                id={index + 1}
+                time={formatDate(item.LichHen)}
+                services={
+                    item.service_detail.map((service) => {
+                        return getServiceById(service.IdDV);
+                    })
+                }
+                mechanics={
+                    item.service_detail.map((service) => {
+                        return getMechanicById(service.IdNV);
+                    })
+                }
+            />
+        );
+    });
     
     return (
         <>
@@ -18,18 +99,7 @@ export default function UpcomingContent() {
                         col_4='MECHANIC(S)'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        <RowUpcoming
-                            id='1'
-                            time='27/11/2023 17:15:00'
-                            services={services}
-                            mechanics={mechanics}
-                        />
-                        <RowUpcoming
-                            id='2'
-                            time='29/11/2023 09:45:00'
-                            services={services}
-                            mechanics={mechanics}
-                        />
+                        {displayData}
                     </div>
                 </div>
             </div>
