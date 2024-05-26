@@ -16,9 +16,14 @@ export default function Maintenance() {
     const [isDisplayed, setDisplay] = useState(false)
     const [listOfServices, setListOfServices] = useState([])
     const [toDoList, setToDoList] = useState([])
+    const [listOfLK, setLK] = useState([])
+    const [listofNCC, setNCC] = useState([])
+    const [listBT, setBT] = useState([])
 
     const apiDichVu = "http://localhost:8000/api/v1/dichvu";
     const apiCTDV = "http://localhost:8000/api/v1/phieuthongtin/chitiet/{id}?IdPhieu=" + localStorage.getItem('IdPhieu');
+    const apiLKCC = "http://localhost:8000/api/v1/lk_ncc/chitiet";
+    const apiNCC = "http://localhost:8000/api/v1/ncc";
 
     useEffect(() => {
         if (service_ac === '') {
@@ -36,7 +41,15 @@ export default function Maintenance() {
 
         fetch(apiCTDV).then((res) => res.json()).then((data) => {
             setToDoList(data)
-        })
+        });
+
+        fetch(apiLKCC).then((res) => res.json()).then((data) => {
+            setLK(data)
+        });
+
+        fetch(apiNCC).then((res) => res.json()).then((data) => {
+            setNCC(data)
+        });
     },[])
 
     const getData = (childData) => {        
@@ -51,10 +64,80 @@ export default function Maintenance() {
     const changeTask = (childData) => {
         setServiceAC(childData)
     }
+
+    function getNCCbyName(name) {
+        const ncc = listofNCC.find(item => item.Ten === name)
+        return ncc.IdCC
+    }
+
+    function getIdLKCC(TenLK, IdCC) {
+        const lkcc = listOfLK.find(item => item.Ten === TenLK && item.IdCC === getNCCbyName(IdCC))
+        return lkcc.IdLKCC
+    }
+
+    async function sendData() {       
+        data.forEach(async (item) => {
+            let dataToSend = {
+                "IdCTDV": item.IdCT,
+                "Serial": item.Serial,
+                "DiemDG": 100
+            }
+    
+            console.log(JSON.stringify(dataToSend));
+    
+            await fetch("http://localhost:8000/api/v1/baotri", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend) // Convert dataToSend to JSON string
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                setBT(prev => [...prev, data.IdBT])
+            }).catch((error) => {
+                alert('Error: ' + error)
+            })
+        }) 
+    };
+
+    useEffect(() => {
+        if (listBT.length !== data.length) {
+            return;
+        }    
+        
+        data.forEach(async (item, index) => {
+            for (let i = 0; i < item.Addon.length; i++) {
+                let dataToSend = {
+                    "IdBT": listBT[index],
+                    "IdLKCC": getIdLKCC(item.Addon[i].model, item.Addon[i].service),
+                    "SoLuong": item.Addon[i].quantity,
+                }
+
+                console.log(JSON.stringify(dataToSend))
+
+                await fetch("http://localhost:8000/api/v1/dslk", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend)
+                }).then((res) => res.json()).then((data) => {
+                    console.log(data)
+                }).catch((error) => {
+                    alert('Error: ' + error)
+                })
+            }
+        })
+        
+    }, [listBT])
     
     const handleSubmit = () => {
         if (window.confirm('This action will end your working process and mark as finish! Are you sure?')) {
             console.log(data)
+            sendData()
+            alert('Your maintenance process has been successfully completed!')
+            localStorage.removeItem('IdPhieu')
             navigate('/mechanic')
         }
         else {

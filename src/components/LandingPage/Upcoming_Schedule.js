@@ -39,8 +39,8 @@ export default function UpcomingSchedule() {
         }));
 
         const stime = new Date();
-        const thirtyMinutesAfter = new Date(stime.getTime() + 30700000);
-        const thirtyMinutesBefore = new Date(stime.getTime() + 23000000);
+        const thirtyMinutesAfter = new Date(stime.getTime() + 28000000);
+        const thirtyMinutesBefore = new Date(stime.getTime() + 16000000); // need to be 2...
 
         console.log(thirtyMinutesBefore.toISOString(), thirtyMinutesAfter.toISOString());
 
@@ -57,6 +57,7 @@ export default function UpcomingSchedule() {
             )
         }
         }));
+
     }, [schedule.length]);
 
     function formatDate(dateString) {
@@ -91,7 +92,7 @@ export default function UpcomingSchedule() {
                         col_4='LOCATION'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {onGoing[0] !== undefined ? onGoing : <RowWithNotification message='No ongoing job'/>}
+                        {onGoing[0] === undefined ? onGoing : <RowWithNotification message='No ongoing job'/>}
                     </div>
                 </div>
                 <div style={{alignSelf: 'stretch', color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>What's next?</div>
