@@ -266,7 +266,7 @@ export default function RequestAndService() {
 
         setTimeout(() => {
             window.location.reload();
-        }, 2000)
+        }, 7000)
     }
 
     const handlePayment = () => {      

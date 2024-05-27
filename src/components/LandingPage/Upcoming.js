@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import RowWithNotification from "./Row_WithNotification";
 
 export default function UpcomingContent() {
-    const [data, setData] = React.useState([]);
+    const [data, setData] = useState([]);
     const [listOfServices, setListOfServices] = useState([])
     const [listOfMechanics, setListOfMechanics] = useState([])
 
     const apiKH = 'http://localhost:8000/api/v1/khachhang/{id}?IdKH=' + localStorage.getItem('IdKH');
     const apiDichVu = "http://localhost:8000/api/v1/dichvu";
     const apiNhanVien = "http://localhost:8000/api/v1/nhanvien";
+    const date = new Date();
 
     useEffect(() => {
         fetch(apiDichVu).then((res) => res.json()).then((data) => 
@@ -65,13 +66,20 @@ export default function UpcomingContent() {
         }
     }
 
-    const displayData = data.map((item, index) => {
-        if (item.LichHen < new Date().toISOString()) {
+    const displayData = data.map((item, index) => {        
+        
+        if (item.LichHen < new Date(date.getTime()+600000*6*7).toISOString()) {
             return null;
+        }
+        else {
+            console.log(item)
         }
 
         if (item.TGBD !== null && item.TGKT !== null) {
             return null;
+        }
+        else {
+            console.log('impass')
         }
         
         return (
@@ -104,7 +112,7 @@ export default function UpcomingContent() {
                         col_4='MECHANIC(S)'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {displayData[0] === null ? <RowWithNotification message="Currently, there's nothing here!"/> : displayData}
+                        {displayData.every(item => item === null) ? <RowWithNotification message="Currently, there's nothing here!"/> : displayData}
                     </div>
                 </div>
             </div>

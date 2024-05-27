@@ -92,7 +92,7 @@ export default function UpcomingSchedule() {
                         col_4='LOCATION'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {onGoing[0] === undefined ? onGoing : <RowWithNotification message='No ongoing job'/>}
+                        {onGoing.every(item => item === null) ? <RowWithNotification message="Currently, there's nothing here!"/> : onGoing}
                     </div>
                 </div>
                 <div style={{alignSelf: 'stretch', color: 'black', fontSize: 48, fontFamily: 'Inria Sans', fontWeight: '700', wordWrap: 'break-word'}}>What's next?</div>
@@ -104,7 +104,7 @@ export default function UpcomingSchedule() {
                         col_4='LOCATION'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {display}
+                        {display.every(item => item === null) ? <RowWithNotification message="Currently, there's nothing here!"/> : display}
                     </div>
                 </div>
             </div>
