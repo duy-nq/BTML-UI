@@ -261,9 +261,7 @@ export default function RequestAndService() {
             console.log('Failed to create detail order!');
         }
 
-        alert('Detail order has been created successfully!')
         localStorage.setItem('IdPhieu', idPhieu)
-        setIdPhieu(null)
         window.open('http://localhost:3000/pd', '_blank')
 
         setTimeout(() => {

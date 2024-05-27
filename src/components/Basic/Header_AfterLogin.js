@@ -105,10 +105,10 @@ export default function ALH(props) {
                             <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Account management"></img>
                         </div>
                         <div onClick={handlePassword} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
-                            <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Change password"></img>
+                            <img style={{width: 32, height: 32}} src="password.svg" alt="Account Logo" title="Change password"></img>
                         </div>
                         <div onClick={handleLogOut} style={{justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, display: 'flex'}}>
-                            <img style={{width: 32, height: 32}} src="codicon_account.svg" alt="Account Logo" title="Log out"></img>
+                            <img style={{width: 32, height: 32}} src="logout.png" alt="Account Logo" title="Log out"></img>
                         </div>
                     </div>
                 </div>
