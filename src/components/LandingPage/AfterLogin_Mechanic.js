@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ALH from "../Basic/Header_AfterLogin";
 import ALF from "../Basic/Footer_AfterLogin";
 import UpcomingSchedule from "./Upcoming_Schedule";
 
 export default function AfterLoginMechanic() {
+    useEffect(() => {
+        localStorage.removeItem('IdPhieu')
+        localStorage.removeItem('TGBD')
+        localStorage.removeItem('TGKT')
+    }, [])
+    
     return (
         <>
             <div style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 54, display: 'inline-flex'}}>

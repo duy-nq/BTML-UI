@@ -2,6 +2,7 @@ import React from "react";
 import HeaderUpcoming from "./Header_Upcoming";
 import RowUpcoming from "./Row_Upcoming";
 import { useState, useEffect } from "react";
+import RowWithNotification from "./Row_WithNotification";
 
 export default function UpcomingContent() {
     const [data, setData] = React.useState([]);
@@ -68,6 +69,10 @@ export default function UpcomingContent() {
         if (item.LichHen < new Date().toISOString()) {
             return null;
         }
+
+        if (item.TGBD !== null && item.TGKT !== null) {
+            return null;
+        }
         
         return (
             <RowUpcoming
@@ -99,7 +104,7 @@ export default function UpcomingContent() {
                         col_4='MECHANIC(S)'
                     />
                     <div style={{justifyContent: 'flex-start', alignItems: 'flex-start', display: 'inline-flex', flexDirection: 'column'}}>
-                        {displayData}
+                        {displayData[0] === null ? <RowWithNotification message="Currently, there's nothing here!"/> : displayData}
                     </div>
                 </div>
             </div>

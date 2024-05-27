@@ -19,6 +19,8 @@ export default function Maintenance() {
     const [listOfLK, setLK] = useState([])
     const [listofNCC, setNCC] = useState([])
     const [listBT, setBT] = useState([])
+    const [TGBD, setTGBD] = useState(null)
+    const [TGKT, setTGKT] = useState(null)
 
     const apiDichVu = "http://localhost:8000/api/v1/dichvu";
     const apiCTDV = "http://localhost:8000/api/v1/phieuthongtin/chitiet/{id}?IdPhieu=" + localStorage.getItem('IdPhieu');
@@ -50,6 +52,11 @@ export default function Maintenance() {
         fetch(apiNCC).then((res) => res.json()).then((data) => {
             setNCC(data)
         });
+
+        if (TGBD === null) {
+            let newDate = new Date()
+            setTGBD(new Date(newDate.getTime()+600000*6*7).toISOString())
+        }
     },[])
 
     const getData = (childData) => {        
@@ -101,6 +108,27 @@ export default function Maintenance() {
         }) 
     };
 
+    async function updatePTT() {
+        let dataToSend = {
+            "TGBD": TGBD,
+            "TGKT": TGKT
+        }
+
+        console.log(JSON.stringify(dataToSend))
+
+        await fetch("http://localhost:8000/api/v1/phieuthongtin/thoigian/{id}?IdPhieu=" + localStorage.getItem('IdPhieu'), {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        }).then((res) => res.json()).then((data) => {
+            alert(data.message)
+        }).catch((error) => {
+            console.log('Error: ' + error)
+        })
+    };
+
     useEffect(() => {
         if (listBT.length !== data.length) {
             return;
@@ -114,8 +142,6 @@ export default function Maintenance() {
                     "SoLuong": item.Addon[i].quantity,
                 }
 
-                console.log(JSON.stringify(dataToSend))
-
                 await fetch("http://localhost:8000/api/v1/dslk", {
                     method: 'POST',
                     headers: {
@@ -128,17 +154,26 @@ export default function Maintenance() {
                     alert('Error: ' + error)
                 })
             }
-        })
-        
+        })        
     }, [listBT])
+
+    useEffect(() => {
+        if (TGKT === null) {
+            console.log('no tgkt')
+            return;
+        }
+        else {
+            console.log(TGBD, TGKT, 'will be sent')
+            updatePTT()
+        }
+    }, [TGKT])
     
     const handleSubmit = () => {
         if (window.confirm('This action will end your working process and mark as finish! Are you sure?')) {
-            console.log(data)
+            let newDate = new Date()
+            setTGKT(new Date(newDate.getTime()+600000*6*7).toISOString())
             sendData()
             alert('Your maintenance process has been successfully completed!')
-            localStorage.removeItem('IdPhieu')
-            navigate('/mechanic')
         }
         else {
             return;
